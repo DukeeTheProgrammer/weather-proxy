@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # The Redis Cache Layer (Scalability)
+  cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+
+  # The Weather Proxy API (Backend)
+  weather-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=cache
+      - OPENWEATHER_API_KEY=your_real_key_here
+    depends_on:
+      - cache
+    restart: always
+
